@@ -39,22 +39,14 @@ module Ransack
         @base = @join_dependency.join_base
         @engine = @base.arel_engine
       end
+    end
 
-      if ::ActiveRecord::VERSION::STRING >= Constants::RAILS_5_2
-        @default_table = Arel::Table.new(
-          @base.table_name, as: @base.base_klass.table_name, type_caster: self
-        )
-      else
-        @default_table = Arel::Table.new(
-          @base.table_name, as: @base.aliased_table_name, type_caster: self
-        )
-      end
+    def bind_pair_for(key)
+      @bind_pairs ||= {}
 
-      @bind_pairs = Hash.new do |hash, key|
-        parent, attr_name = get_parent_and_attribute_name(key)
-        if parent && attr_name
-          hash[key] = [parent, attr_name]
-        end
+      @bind_pairs[key] ||= begin
+        parent, attr_name = get_parent_and_attribute_name(key.to_s)
+        [parent, attr_name] if parent && attr_name
       end
     end
 
