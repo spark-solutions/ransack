@@ -3,7 +3,7 @@ gemspec
 
 gem 'rake'
 
-rails = ENV['RAILS'] || 'master'
+rails = ENV['RAILS'] || '5-2-stable'
 
 if rails == 'master'
   gem 'polyamorous', github: 'activerecord-hackery/polyamorous'
